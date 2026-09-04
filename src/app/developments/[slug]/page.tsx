@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { pageMetadata } from "@/lib/seo";
 import { developments, getDevelopment } from "@/data/developments";
 import { images } from "@/data/images";
 import { cn } from "@/lib/utils";
@@ -30,14 +31,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const development = getDevelopment(slug);
   if (!development) return {};
-  const title = `${development.name} | Honeybroad Homes`;
-  const description = `${development.shortDescription} ${development.location.settlement}, ${development.location.area}. ${development.status}.`;
-  return {
-    title: { absolute: title },
-    description,
-    alternates: { canonical: `/developments/${development.slug}` },
-    openGraph: { title, description, url: `/developments/${development.slug}` },
-  };
+  return pageMetadata({
+    title: `${development.name} | Honeybroad Homes`,
+    description: `${development.shortDescription} ${development.location.settlement}, ${development.location.area}. ${development.status}.`,
+    path: `/developments/${development.slug}`,
+    absoluteTitle: true,
+  });
 }
 
 export default async function DevelopmentPage({

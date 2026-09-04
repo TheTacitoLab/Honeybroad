@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { developments } from "@/data/developments";
 import { images } from "@/data/images";
 import { Section } from "@/components/ui/Section";
@@ -8,16 +9,13 @@ import { TextLink } from "@/components/ui/TextLink";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { DevelopmentCard } from "@/components/developments/DevelopmentCard";
 
-export const metadata: Metadata = {
-  title: { absolute: "Honeybroad Developments | Cornwall" },
+export const metadata: Metadata = pageMetadata({
+  title: "Honeybroad Developments | Cornwall",
   description:
     "Small sites. Good homes. Built with the place in mind. Honeybroad's current and upcoming developments across Cornwall and the South West.",
-  alternates: { canonical: "/developments" },
-  openGraph: {
-    title: "Honeybroad Developments | Cornwall",
-    url: "/developments",
-  },
-};
+  path: "/developments",
+  absoluteTitle: true,
+});
 
 export default function DevelopmentsPage() {
   const [first, ...rest] = developments;

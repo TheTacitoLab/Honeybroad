@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { site } from "@/data/site";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -6,13 +7,12 @@ import { Copy } from "@/components/ui/Copy";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { ContactForm } from "@/components/contact/ContactForm";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description:
     "Talk to Honeybroad about land, development opportunities, partnerships or anything else. hello@honeybroad.com",
-  alternates: { canonical: "/contact" },
-  openGraph: { title: "Contact | Honeybroad Homes", url: "/contact" },
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

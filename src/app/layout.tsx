@@ -37,13 +37,14 @@ export const metadata: Metadata = {
     url: "/",
     title: "Honeybroad Homes | Contemporary Homes in Cornwall",
     description: site.description,
+    images: [{ url: "/opengraph-image.png", width: 1200, height: 630, alt: "Honeybroad homes" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Honeybroad Homes | Contemporary Homes in Cornwall",
     description: site.description,
+    images: ["/opengraph-image.png"],
   },
-  alternates: { canonical: "/" },
   robots: { index: true, follow: true },
 };
 
