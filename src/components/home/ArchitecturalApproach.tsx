@@ -32,31 +32,31 @@ export function ArchitecturalApproach() {
           <ImageReveal
             direction="up"
             parallax={7}
-            className="aspect-[4/5] lg:w-[74%]"
+            className="aspect-[4/5] md:w-[74%]"
           >
             <EditorialImage
               image={images.homeArchitecture1}
-              sizes="(min-width: 1024px) 36vw, 100vw"
+              sizes="(min-width: 1024px) 36vw, (min-width: 768px) 74vw, 100vw"
             />
           </ImageReveal>
           <ImageReveal
             direction="left"
             parallax={5}
-            className="aspect-[4/3] lg:w-[92%] lg:self-end"
+            className="aspect-[4/3] md:w-[92%] md:self-end"
           >
             <EditorialImage
               image={images.homeArchitecture2}
-              sizes="(min-width: 1024px) 46vw, 100vw"
+              sizes="(min-width: 1024px) 46vw, (min-width: 768px) 92vw, 100vw"
             />
           </ImageReveal>
           <ImageReveal
             direction="up"
             parallax={8}
-            className="aspect-[4/5] lg:ml-[12%] lg:w-[64%]"
+            className="aspect-[4/5] md:ml-[12%] md:w-[64%]"
           >
             <EditorialImage
               image={images.homeArchitecture3}
-              sizes="(min-width: 1024px) 32vw, 100vw"
+              sizes="(min-width: 1024px) 32vw, (min-width: 768px) 64vw, 100vw"
             />
           </ImageReveal>
         </ScrollSection>

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import { site } from "@/data/site";
+import { navigation } from "@/data/navigation";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { PageTransitionProvider } from "@/components/motion/PageTransition";
@@ -10,10 +11,20 @@ import "./globals.css";
 
 const serif = DM_Serif_Display({
   weight: "400",
-  style: ["normal", "italic"],
+  style: "normal",
   subsets: ["latin"],
   variable: "--font-serif",
   display: "swap",
+});
+
+// Used for a single line on the homepage, so it is not preloaded everywhere.
+const serifItalic = DM_Serif_Display({
+  weight: "400",
+  style: "italic",
+  subsets: ["latin"],
+  variable: "--font-serif-italic",
+  display: "swap",
+  preload: false,
 });
 
 const sans = DM_Sans({
@@ -37,6 +48,7 @@ export const metadata: Metadata = {
     url: "/",
     title: "Honeybroad Homes | Contemporary Homes in Cornwall",
     description: site.description,
+    // The file-based src/app/opengraph-image.png (and its .alt.txt) wins for the image itself.
     images: [{ url: "/opengraph-image.png", width: 1200, height: 630, alt: "Honeybroad homes" }],
   },
   twitter: {
@@ -45,7 +57,6 @@ export const metadata: Metadata = {
     description: site.description,
     images: ["/opengraph-image.png"],
   },
-  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -56,8 +67,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${serif.variable} ${sans.variable}`}>
+    <html
+      lang="en-GB"
+      className={`${serif.variable} ${serifItalic.variable} ${sans.variable}`}
+    >
       <body className="flex min-h-svh flex-col overflow-x-clip">
+        {/* Without JavaScript, show everything that would otherwise wait for a reveal. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <MotionProvider>
           <SmoothScroll>
             <PageTransitionProvider>
@@ -67,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 Skip to content
               </a>
-              <Header />
+              <Header navigation={navigation} />
               <main id="main" className="relative flex-1">
                 {children}
               </main>

@@ -19,10 +19,10 @@ export function DevelopmentOptions({ options }: { options: Options }) {
             delay={i * 0.12}
             className={cn(
               "flex flex-col border-b border-deep/15 py-10 md:border-b-0 md:border-t md:py-12",
-              i > 0 && "md:pl-10",
+              i > 0 && "md:pl-6 lg:pl-10",
             )}
           >
-            <p className="text-label flex items-center justify-between gap-4 opacity-70">
+            <p className="text-label flex flex-wrap items-center justify-between gap-x-4 gap-y-1 opacity-85">
               <span>{item.label}</span>
               <span className="uppercase tracking-[0.08em]">{options.stage}</span>
             </p>
@@ -32,11 +32,8 @@ export function DevelopmentOptions({ options }: { options: Options }) {
                 {item.homes === 1 ? "home" : "homes"}
               </span>
             </p>
-            <p className="text-lede mt-6 max-w-[22rem]">
-              {item.summary}
-              {item.preferred ? null : null}
-            </p>
-            <ul className="text-body mt-6 flex max-w-[24rem] flex-col gap-2 opacity-80">
+            <p className="text-lede mt-6 max-w-[22rem]">{item.summary}</p>
+            <ul className="text-body mt-6 flex max-w-[24rem] flex-col gap-2 opacity-85">
               {item.points.map((pt) => (
                 <li key={pt} className="flex gap-3">
                   <span aria-hidden className="mt-[0.7em] h-px w-4 shrink-0 bg-current opacity-60" />
@@ -48,7 +45,7 @@ export function DevelopmentOptions({ options }: { options: Options }) {
         ))}
       </ol>
       {options.note ? (
-        <TextReveal as="p" delay={0.2} className="text-body mt-12 max-w-[38rem] opacity-80">
+        <TextReveal as="p" delay={0.2} to={0.85} className="text-body mt-12 max-w-[38rem]">
           {options.note}
         </TextReveal>
       ) : null}

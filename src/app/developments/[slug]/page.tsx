@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { pageMetadata } from "@/lib/seo";
 import { developments, getDevelopment } from "@/data/developments";
-import { images } from "@/data/images";
-import { cn } from "@/lib/utils";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Copy } from "@/components/ui/Copy";
@@ -33,12 +31,17 @@ export async function generateMetadata({
   if (!development) return {};
   return pageMetadata({
     title: `${development.name} | Honeybroad Homes`,
-    description: `${development.shortDescription} ${development.location.settlement}, ${development.location.area}. ${development.status}.`,
+    description: `${development.shortDescription} Currently at ${development.status.toLowerCase()}.`,
     path: `/developments/${development.slug}`,
     absoluteTitle: true,
   });
 }
 
+/**
+ * A development story page. Every block is driven by the development's data
+ * and renders only when that data is present, so a new project needs nothing
+ * more than an entry in developments.ts.
+ */
 export default async function DevelopmentPage({
   params,
 }: {
@@ -56,6 +59,7 @@ export default async function DevelopmentPage({
     options,
     architecture,
     timeline,
+    statusNote,
     holdStrategy,
   } = development;
 
@@ -89,10 +93,8 @@ export default async function DevelopmentPage({
                   key={line}
                   as="p"
                   delay={i * 0.12}
-                  className={cn(
-                    "text-display-md",
-                    i > 0 && "mt-8 opacity-80 md:mt-10",
-                  )}
+                  to={i > 0 ? 0.85 : 1}
+                  className={i > 0 ? "text-display-md mt-8 md:mt-10" : "text-display-md"}
                 >
                   {line}
                 </TextReveal>
@@ -107,7 +109,7 @@ export default async function DevelopmentPage({
           <div className="wrap gutter">
             <div className="grid-editorial">
               <SectionHeading id="the-site" eyebrow="The site" size="lg" className="col-span-12 lg:col-span-6">
-                A road, a stream and a boundary that stays where it is.
+                {site.heading}
               </SectionHeading>
               <Copy size="lede" className="col-span-12 mt-10 lg:col-span-5 lg:col-start-8 lg:mt-3">
                 {site.paragraphs.map((p) => (
@@ -131,10 +133,11 @@ export default async function DevelopmentPage({
                     sizes="(min-width: 1024px) 80vw, 100vw"
                   />
                 </ImageReveal>
-                <TextReveal as="p" className="text-small col-span-12 mt-4 opacity-70 lg:col-span-10 lg:col-start-2">
-                  The site plan shows the existing boundary and the stream as
-                  surveyed. Neither will be altered.
-                </TextReveal>
+                {site.planCaption ? (
+                  <TextReveal as="p" to={0.85} className="text-small col-span-12 mt-4 lg:col-span-10 lg:col-start-2">
+                    {site.planCaption}
+                  </TextReveal>
+                ) : null}
               </div>
             ) : null}
           </div>
@@ -173,14 +176,17 @@ export default async function DevelopmentPage({
                 </>
               }
             >
-              {waterAndLandscape.image ? (
-                <ImageReveal direction="up" parallax={7} className="aspect-[4/5] lg:w-[80%]">
-                  <EditorialImage image={waterAndLandscape.image} sizes="(min-width: 1024px) 40vw, 100vw" />
-                </ImageReveal>
-              ) : null}
-              <ImageReveal direction="left" parallax={5} className="aspect-[16/10] lg:w-[92%] lg:self-end">
-                <EditorialImage image={images.newmillsLandscape} sizes="(min-width: 1024px) 46vw, 100vw" />
-              </ImageReveal>
+              {waterAndLandscape.images?.map((image, i) =>
+                i % 2 === 0 ? (
+                  <ImageReveal key={image.src} direction="up" parallax={7} className="aspect-[4/5] md:w-[80%]">
+                    <EditorialImage image={image} sizes="(min-width: 1024px) 40vw, (min-width: 768px) 80vw, 100vw" />
+                  </ImageReveal>
+                ) : (
+                  <ImageReveal key={image.src} direction="left" parallax={5} className="aspect-[16/10] md:w-[92%] md:self-end">
+                    <EditorialImage image={image} sizes="(min-width: 1024px) 46vw, (min-width: 768px) 92vw, 100vw" />
+                  </ImageReveal>
+                ),
+              )}
             </ScrollSection>
           </div>
         </Section>
@@ -191,7 +197,7 @@ export default async function DevelopmentPage({
           <div className="wrap gutter">
             <div className="grid-editorial">
               <SectionHeading id="options" eyebrow="Development options" size="lg" className="col-span-12 lg:col-span-7">
-                Two, three or four homes. Nothing drawn yet.
+                {options.heading}
               </SectionHeading>
               <Copy size="lede" className="col-span-12 mt-10 lg:col-span-4 lg:col-start-9 lg:mt-3">
                 <p>{options.intro}</p>
@@ -233,7 +239,7 @@ export default async function DevelopmentPage({
 
             {architecture.references?.length ? (
               <div className="grid-editorial mt-16 md:mt-24">
-                <TextReveal as="p" className="text-label col-span-12 opacity-70 md:col-span-3">
+                <TextReveal as="p" to={0.85} className="text-label col-span-12 md:col-span-3">
                   What we keep looking at
                 </TextReveal>
                 <ul className="col-span-12 mt-6 grid grid-cols-2 gap-x-8 gap-y-3 md:col-span-8 md:col-start-5 md:mt-0 md:grid-cols-3">
@@ -243,7 +249,7 @@ export default async function DevelopmentPage({
                     </TextReveal>
                   ))}
                 </ul>
-                <TextReveal as="p" delay={0.2} className="text-body col-span-12 mt-10 max-w-[36rem] opacity-80 md:col-span-8 md:col-start-5">
+                <TextReveal as="p" delay={0.2} to={0.85} className="text-body col-span-12 mt-10 max-w-[36rem] md:col-span-8 md:col-start-5">
                   These references inform the design. They are not copied.
                 </TextReveal>
               </div>
@@ -259,12 +265,11 @@ export default async function DevelopmentPage({
               <SectionHeading id="status" eyebrow="Development status" size="md">
                 Where things are.
               </SectionHeading>
-              <Copy className="mt-8">
-                <p>
-                  This is an early-stage development. No planning application
-                  has been made and no layout has been fixed.
-                </p>
-              </Copy>
+              {statusNote ? (
+                <Copy className="mt-8">
+                  <p>{statusNote}</p>
+                </Copy>
+              ) : null}
             </div>
             <div className="col-span-12 mt-12 lg:col-span-7 lg:col-start-6 lg:mt-0">
               <ProjectTimeline steps={timeline} />

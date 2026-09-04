@@ -1,22 +1,19 @@
 "use client";
 
 import { m, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useRef, type CSSProperties } from "react";
 import type { Development } from "@/data/developments";
-import { easeOutSoft } from "@/lib/motion";
 import { EditorialImage } from "@/components/ui/EditorialImage";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
-const entrance = (delay: number) => ({
-  initial: { opacity: 0, y: 22 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 1.05, ease: easeOutSoft, delay },
-});
+const riseDelay = (seconds: number) =>
+  ({ "--rise-delay": `${seconds}s` }) as CSSProperties;
 
 /**
  * Opening of a project page: the name at full size, the place and stage
  * beneath it, and the site itself filling the lower half of the viewport.
- * The image drifts a little slower than the page as the visitor leaves.
+ * Entrances are CSS so they start at first paint; the image drifts a little
+ * slower than the page as the visitor leaves.
  */
 export function DevelopmentHero({ development }: { development: Development }) {
   const reduced = usePrefersReducedMotion();
@@ -39,34 +36,42 @@ export function DevelopmentHero({ development }: { development: Development }) {
         style={{ y: textY }}
         className="wrap gutter flex flex-1 flex-col justify-end pb-12 pt-32 md:pb-16 md:pt-40"
       >
-        <m.h1 {...entrance(0.1)} id="development-title" className="text-display-xl">
+        <h1
+          id="development-title"
+          className="text-display-xl rise"
+          style={riseDelay(0.05)}
+        >
           {development.name}
-        </m.h1>
+        </h1>
 
-        <div className="mt-8 flex flex-col gap-6 md:mt-12 md:flex-row md:items-end md:justify-between">
-          <m.p {...entrance(0.3)} className="text-lede">
+        <div className="grid-editorial mt-8 items-end gap-y-6 md:mt-12">
+          <p className="text-lede rise col-span-12 lg:col-span-6" style={riseDelay(0.2)}>
             {development.location.settlement}
             <br />
-            <span className="text-cream/75">{development.location.area}</span>
-          </m.p>
-          <m.p {...entrance(0.4)} className="text-label opacity-80">
+            <span className="text-cream/85">{development.location.area}</span>
+          </p>
+          <p
+            className="text-label rise col-span-12 opacity-85 lg:col-span-4 lg:col-start-9"
+            style={riseDelay(0.3)}
+          >
             {development.status}
-          </m.p>
+          </p>
         </div>
       </m.div>
 
-      <m.div
-        {...entrance(0.5)}
-        className="relative mt-10 h-[46svh] w-full overflow-hidden md:mt-14 md:h-[54svh]"
+      <div
+        className="rise relative mt-10 h-[46svh] w-full overflow-hidden md:mt-14 md:h-[54svh]"
+        style={riseDelay(0.15)}
       >
         <m.div style={{ y: imageY }} className="absolute inset-x-0 -top-[14%] bottom-0">
           <EditorialImage
             image={development.heroImage}
             priority
+            fetchPriority="high"
             sizes="100vw"
           />
         </m.div>
-      </m.div>
+      </div>
     </section>
   );
 }

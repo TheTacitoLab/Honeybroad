@@ -14,20 +14,20 @@ export function Closing() {
         </SectionHeading>
 
         <div className="grid-editorial mt-[clamp(4rem,10vw,9rem)] items-end">
-          <TextReveal className="text-body col-span-6 md:col-span-3">
+          <TextReveal className="text-body col-span-12 md:col-span-3">
             <p>{site.name}</p>
-            <p className="text-cream/70">{site.region}</p>
+            <p className="text-cream/85">{site.region}</p>
           </TextReveal>
 
-          <TextReveal delay={0.1} className="text-body col-span-6 md:col-span-3">
+          <TextReveal delay={0.1} className="text-body col-span-12 mt-8 md:col-span-3 md:mt-0">
             <p>Contact</p>
             <p>
-              <a href={`mailto:${site.email}`} className="link-underline">
+              <a href={`mailto:${site.email}`} className="link-underline [overflow-wrap:anywhere]">
                 {site.email}
               </a>
             </p>
             <p>
-              <a href={site.url} className="link-underline text-cream/70">
+              <a href={site.url} className="link-underline text-cream/85 [overflow-wrap:anywhere]">
                 {site.url.replace("https://", "")}
               </a>
             </p>

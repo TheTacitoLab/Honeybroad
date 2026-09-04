@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { cn, toneClasses, type Tone } from "@/lib/utils";
 
 type Props = {
@@ -14,8 +14,7 @@ type Props = {
   curve?: boolean;
   /** Vertical padding preset. */
   padding?: "none" | "tight" | "default" | "loose";
-  "aria-labelledby"?: string;
-};
+} & Pick<ComponentPropsWithoutRef<"section">, "aria-label" | "aria-labelledby">;
 
 const paddings = {
   none: "",

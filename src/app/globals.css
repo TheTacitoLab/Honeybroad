@@ -3,7 +3,8 @@
 /* ------------------------------------------------------------------
    Honeybroad design tokens
    A deliberately small palette: Deep Water, Honey Cream and White.
-   Only opacity and two near-tints are used for hierarchy.
+   Only opacity and two near-tints are used for hierarchy. Text under 24px
+   never drops below 85% opacity, which keeps every pairing above WCAG AA.
 ------------------------------------------------------------------- */
 @theme {
   --color-deep: #1d617a;
@@ -62,6 +63,38 @@ body {
 :focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 4px;
+}
+/* Sections focused programmatically after an in-page link need no ring. */
+[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
+/* ------------------------------------------------------------------
+   First-paint entrance. Pure CSS so the first viewport starts moving
+   before any JavaScript arrives (and counts for LCP straight away).
+   `backwards` fill only: once finished, the element's own styles apply.
+------------------------------------------------------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.rise {
+  animation: rise 1s var(--ease-out-soft) backwards;
+  animation-delay: var(--rise-delay, 0s);
 }
 
 /* ------------------------------------------------------------------
@@ -146,12 +179,19 @@ body {
   }
 }
 
-/* Navigation-style link: a hairline slides in from the left on hover. */
+/* Navigation-style link: a hairline slides in from the left on hover.
+   The ::before pseudo-element enlarges the hit area to ~44px without
+   moving the hairline or the row. */
 @utility link-line {
   position: relative;
   display: inline-block;
   text-decoration: none;
   padding-bottom: 0.15em;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -0.6em -0.3em;
+  }
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
   background-size: 0% 1px;
@@ -172,6 +212,11 @@ body {
   display: inline-block;
   text-decoration: none;
   padding-bottom: 0.1em;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -0.6em -0.3em;
+  }
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
   background-size: 100% 1px;
@@ -187,10 +232,16 @@ body {
 }
 
 @utility link-arrow {
+  position: relative;
   display: inline-flex;
   align-items: baseline;
   gap: 0.5em;
   text-decoration: none;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -0.7em -0.3em;
+  }
   & > .arrow {
     display: inline-block;
     transition: transform 0.45s var(--ease-out-soft);
@@ -236,6 +287,10 @@ body {
   .scroll-line::after {
     animation: none;
     transform: none;
+  }
+  .rise {
+    animation-name: fade-in;
+    animation-duration: 0.6s;
   }
   html {
     scroll-behavior: auto;

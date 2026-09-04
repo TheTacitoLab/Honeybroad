@@ -1,27 +1,29 @@
 "use client";
 
 import { AnimatePresence, m } from "framer-motion";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { useEffect, useRef } from "react";
-import { navigation } from "@/data/navigation";
+import { useCallback, useEffect, useRef } from "react";
+import type { NavItem } from "@/data/navigation";
 import { site } from "@/data/site";
 import { easeInOutSoft, easeOutSoft } from "@/lib/motion";
 import { Lockup } from "@/components/brand/Logo";
 import { TransitionLink } from "@/components/motion/TransitionLink";
 import { useLenis } from "@/components/motion/SmoothScroll";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Props = {
+  navigation: NavItem[];
   open: boolean;
   onClose: () => void;
 };
 
 /**
  * Full-screen menu: Deep Water ground, large cream serif links that arrive a
- * beat apart. Nothing else.
+ * beat apart. Nothing else. Focus stays inside while it is open.
  */
-export function MobileMenu({ open, onClose }: Props) {
+export function MobileMenu({ navigation, open, onClose }: Props) {
   const lenisRef = useLenis();
   const reduced = usePrefersReducedMotion();
+  const dialog = useRef<HTMLDivElement>(null);
   const firstLink = useRef<HTMLAnchorElement>(null);
   const previouslyFocused = useRef<Element | null>(null);
 
@@ -31,7 +33,27 @@ export function MobileMenu({ open, onClose }: Props) {
     const lenis = lenisRef.current;
     lenis?.stop();
     document.documentElement.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const items = dialog.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled])',
+      );
+      if (!items?.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     document.addEventListener("keydown", onKey);
     const focusTimer = window.setTimeout(() => firstLink.current?.focus(), 300);
 
@@ -45,6 +67,12 @@ export function MobileMenu({ open, onClose }: Props) {
       }
     };
   }, [open, onClose, lenisRef]);
+
+  // Release the page before a link acts, so same-page anchors can scroll.
+  const closeAndRelease = useCallback(() => {
+    lenisRef.current?.start();
+    onClose();
+  }, [lenisRef, onClose]);
 
   // Flatten navigation into: About, Developments, (Newmills…), Contact
   const rows = navigation.flatMap((item) => {
@@ -61,6 +89,8 @@ export function MobileMenu({ open, onClose }: Props) {
       {open ? (
         <m.div
           key="mobile-menu"
+          id="mobile-menu"
+          ref={dialog}
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
@@ -75,7 +105,7 @@ export function MobileMenu({ open, onClose }: Props) {
           transition={{ duration: 0.6, ease: easeInOutSoft }}
         >
           <div className="gutter flex h-16 items-center justify-between md:h-20">
-            <TransitionLink href="/" onClick={onClose} aria-label="Honeybroad home">
+            <TransitionLink href="/" onClick={closeAndRelease} aria-label="Honeybroad home">
               <Lockup className="h-[22px] w-auto" />
             </TransitionLink>
             <button
@@ -106,15 +136,15 @@ export function MobileMenu({ open, onClose }: Props) {
                     },
                   }}
                   exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                  className={row.sub ? "mt-1 pl-6" : i === 0 ? "" : "mt-4"}
+                  className={row.sub ? "mt-2 pl-6" : i === 0 ? "" : "mt-4"}
                 >
                   <TransitionLink
                     ref={i === 0 ? firstLink : undefined}
                     href={row.href}
-                    onClick={onClose}
+                    onClick={closeAndRelease}
                     className={
                       row.sub
-                        ? "text-display-sm block opacity-70"
+                        ? "text-display-sm -my-1.5 block py-1.5 opacity-85"
                         : "text-display-lg block"
                     }
                   >
@@ -129,7 +159,7 @@ export function MobileMenu({ open, onClose }: Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { delay: 0.7, duration: 0.6 } }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            className="gutter text-small flex flex-col gap-1 pb-8 text-cream/70"
+            className="gutter text-small flex flex-col gap-1 pb-8 text-cream/85"
           >
             <a href={`mailto:${site.email}`} className="link-underline self-start">
               {site.email}

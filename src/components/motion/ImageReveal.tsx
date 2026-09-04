@@ -64,6 +64,7 @@ export function ImageReveal({
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
       {/* Mask: slides into place (a plain fade when motion is reduced). */}
       <m.div
+        data-reveal=""
         className="absolute inset-0 overflow-hidden"
         initial={{ ...move.mask, opacity: 0 }}
         animate={inView ? { x: "0%", y: "0%", opacity: 1 } : undefined}
@@ -71,6 +72,7 @@ export function ImageReveal({
       >
         {/* Counter-move + settle from a slight zoom. */}
         <m.div
+          data-reveal=""
           className="absolute inset-0"
           initial={{ ...move.counter, scale: scaleFrom }}
           animate={inView ? { x: "0%", y: "0%", scale: 1 } : undefined}

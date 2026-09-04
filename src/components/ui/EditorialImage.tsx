@@ -9,6 +9,8 @@ type Props = {
   aspect?: string;
   sizes?: string;
   priority?: boolean;
+  /** Set "high" on the largest contentful image of a page. */
+  fetchPriority?: "high" | "low" | "auto";
   /** Colour of the placeholder caption. */
   noteTone?: "cream" | "deep";
 };
@@ -23,6 +25,7 @@ export function EditorialImage({
   aspect,
   sizes = "100vw",
   priority = false,
+  fetchPriority,
   noteTone = "cream",
 }: Props) {
   return (
@@ -36,6 +39,7 @@ export function EditorialImage({
         fill
         sizes={sizes}
         priority={priority}
+        fetchPriority={fetchPriority}
         className="object-cover"
       />
       {image.placeholder && image.note ? (

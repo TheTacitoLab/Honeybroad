@@ -12,6 +12,8 @@ type Props = {
   image?: ImageAsset;
   /** "feature" is a full-width, image-led card; "grid" is for the portfolio. */
   variant?: "feature" | "grid";
+  /** Heading level, so the card sits correctly in each page's outline. */
+  headingLevel?: "h2" | "h3";
   className?: string;
 };
 
@@ -23,6 +25,7 @@ export function DevelopmentCard({
   development,
   image,
   variant = "feature",
+  headingLevel: Heading = "h3",
   className,
 }: Props) {
   const img = image ?? development.heroImage;
@@ -32,7 +35,7 @@ export function DevelopmentCard({
     <TransitionLink
       href={`/developments/${development.slug}`}
       className={cn("group block", className)}
-      aria-label={`${development.name}, ${location}. Explore ${development.name}`}
+      aria-label={`${development.name}, ${location}. ${development.status}. Explore ${development.name}`}
     >
       <ImageReveal
         parallax={4}
@@ -56,8 +59,8 @@ export function DevelopmentCard({
           delay={0.1}
           className={cn(variant === "feature" && "col-span-12 md:col-span-6")}
         >
-          <h3 className="text-display-md">{development.name}</h3>
-          <p className="text-body mt-2 opacity-75">{location}</p>
+          <Heading className="text-display-md">{development.name}</Heading>
+          <p className="text-body mt-2 opacity-85">{location}</p>
         </TextReveal>
 
         <TextReveal
@@ -67,7 +70,7 @@ export function DevelopmentCard({
               "col-span-12 mt-6 md:col-span-5 md:col-start-8 md:mt-0",
           )}
         >
-          <p className="text-label opacity-70">{development.status}</p>
+          <p className="text-label opacity-85">{development.status}</p>
           <p className="text-body mt-4 max-w-[32rem]">
             {development.shortDescription}
           </p>

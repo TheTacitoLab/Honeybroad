@@ -7,7 +7,7 @@ export type ContactValues = { name: string; email: string; message: string };
 export type ContactState =
   | { status: "idle" }
   | { status: "sent" }
-  | { status: "error"; message: string; values: ContactValues }
+  | { status: "error"; message: string; field?: "email"; values: ContactValues }
   | { status: "unconfigured"; values: ContactValues };
 
 const MAX = { name: 120, email: 200, message: 4000 };
@@ -47,6 +47,7 @@ export async function sendEnquiry(
     return {
       status: "error",
       message: "That email address doesn't look right.",
+      field: "email",
       values,
     };
   }

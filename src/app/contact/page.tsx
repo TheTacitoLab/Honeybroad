@@ -19,7 +19,7 @@ export default function ContactPage() {
     <Section tone="deep" padding="none" aria-labelledby="contact-title" className="z-0">
       <div className="wrap gutter grid-editorial min-h-svh pb-24 pt-36 md:pb-32 md:pt-44">
         <div className="col-span-12 lg:col-span-6">
-          <SectionHeading as="h1" id="contact-title" size="xl">
+          <SectionHeading as="h1" id="contact-title" size="xl" immediate>
             Talk to us.
           </SectionHeading>
           <Copy size="lede" delay={0.15} className="mt-10 text-cream/85 md:mt-14">
@@ -36,7 +36,7 @@ export default function ContactPage() {
               {site.email}
             </a>
           </TextReveal>
-          <TextReveal delay={0.35} className="text-body mt-12 text-cream/70">
+          <TextReveal delay={0.35} className="text-body mt-12 text-cream/85">
             <p>{site.name}</p>
             <p>{site.region}</p>
           </TextReveal>

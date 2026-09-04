@@ -21,10 +21,10 @@ export function Copy({
   return (
     <TextReveal
       delay={delay}
+      to={muted ? 0.85 : 1}
       className={cn(
         "copy max-w-[38rem]",
         size === "lede" ? "text-lede" : "text-body",
-        muted && "opacity-80",
         className,
       )}
     >

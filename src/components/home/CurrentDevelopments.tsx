@@ -1,5 +1,4 @@
 import { featuredDevelopments } from "@/data/developments";
-import { images } from "@/data/images";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TextLink } from "@/components/ui/TextLink";
@@ -23,11 +22,7 @@ export function CurrentDevelopments() {
 
         <div className="mt-14 flex flex-col gap-24 md:mt-20">
           {featuredDevelopments.map((d) => (
-            <DevelopmentCard
-              key={d.slug}
-              development={d}
-              image={d.slug === "newmills" ? images.homeNewmillsCard : undefined}
-            />
+            <DevelopmentCard key={d.slug} development={d} image={d.cardImages?.home} />
           ))}
         </div>
 

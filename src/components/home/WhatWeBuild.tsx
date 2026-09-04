@@ -30,7 +30,7 @@ export function WhatWeBuild() {
                 and the South West.
               </p>
               <p>Every project starts with the same question:</p>
-              <p className="text-display-sm italic">What belongs here?</p>
+              <p className="text-display-sm italic [font-family:var(--font-serif-italic)]">What belongs here?</p>
               <p>
                 We look at the landscape, the surrounding buildings, the
                 community and the way people actually want to live.

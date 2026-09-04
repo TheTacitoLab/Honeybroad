@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentProps, MouseEvent, Ref } from "react";
-import { usePageTransition } from "./PageTransition";
+import { focusHashTarget, usePageTransition } from "./PageTransition";
 import { useScrollTo } from "./SmoothScroll";
 
 type Props = Omit<ComponentProps<typeof Link>, "href" | "ref"> & {
@@ -34,8 +34,14 @@ export function TransitionLink({
     if (event.defaultPrevented) return;
     if (hash && samePage) {
       event.preventDefault();
-      scrollTo(`#${hash}`);
-      window.history.pushState(null, "", `#${hash}`);
+      // Next frame so anything the click closed (the mobile menu, which
+      // pauses Lenis) has released the page first.
+      window.requestAnimationFrame(() => {
+        scrollTo(`#${hash}`);
+        window.history.pushState(null, "", `#${hash}`);
+        const target = document.getElementById(hash);
+        if (target) focusHashTarget(target);
+      });
     }
   };
 

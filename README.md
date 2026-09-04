@@ -45,15 +45,14 @@ public/images/placeholders/  flat brand-toned stand-ins for photography
 
 Every image on the site is registered in `src/data/images.ts`. The current files are placeholders: flat brand-toned images with a small caption describing the intended shot. To replace one:
 
-1. Drop the photograph into `public/images/`.
-2. In `src/data/images.ts` update `src`, `width`, `height` and write a real `alt`.
-3. Set `placeholder: false`. The caption disappears.
+1. Drop the photograph into `public/images/` (for example `public/images/newmills-aerial.jpg`).
+2. In `src/data/images.ts` change that entry from `ph("newmills-aerial.jpg", "…note…")` to `photo("newmills-aerial.jpg", "Real alt text describing the picture")`.
 
-Crops are handled by `object-fit: cover`, so supply generous, well-composed images (landscape shots at least 2000px wide, portraits at least 1400px wide). Next.js resizes and converts them at request time.
+The on-image caption disappears because the entry is no longer a placeholder. Crops are handled by `object-fit: cover`, so supply generous, well-composed images (landscape shots at least 2000px wide, portraits at least 1400px wide). Next.js resizes and converts them at request time.
 
 ## Adding a development
 
-Add an object to the `developments` array in `src/data/developments.ts`. Required: `slug`, `name`, `location`, `status`, `shortDescription`, `heroImage`. Optional: `description`, `year`, `numberOfHomes`, `tags`, `featured` (shows on the homepage), and the project-page content blocks (`intro`, `site`, `opportunity`, `waterAndLandscape`, `options`, `architecture`, `timeline`, `holdStrategy`). Sections of the project page only render when their data is present, so a new development can start with just a hero and an intro.
+Add an object to the `developments` array in `src/data/developments.ts`. Required: `slug`, `name`, `location`, `status`, `shortDescription`, `heroImage`. Optional: `description`, `cardImages` (alternative crops for the homepage and portfolio cards), `year`, `numberOfHomes`, `tags`, `featured` (shows on the homepage), and the project-page content blocks (`intro`, `site`, `opportunity`, `waterAndLandscape`, `options`, `architecture`, `timeline`, `statusNote`, `holdStrategy`). Every heading, caption and image on the project page comes from this data, and each block only renders when it is present, so a new development can start with just a hero and an intro and grow from there.
 
 ## Contact form
 

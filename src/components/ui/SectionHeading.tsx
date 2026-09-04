@@ -14,6 +14,8 @@ type Props = {
   headingClassName?: string;
   id?: string;
   delay?: number;
+  /** First-viewport heading: animate with CSS from first paint. */
+  immediate?: boolean;
 };
 
 const sizes = {
@@ -33,11 +35,12 @@ export function SectionHeading({
   headingClassName,
   id,
   delay = 0,
+  immediate = false,
 }: Props) {
   return (
-    <TextReveal className={className} delay={delay}>
+    <TextReveal className={className} delay={delay} immediate={immediate}>
       {eyebrow ? (
-        <p className="text-label mb-5 opacity-70 md:mb-7">{eyebrow}</p>
+        <p className="text-label mb-5 opacity-85 md:mb-7">{eyebrow}</p>
       ) : null}
       <Tag id={id} className={cn(sizes[size], headingClassName)}>
         {children}

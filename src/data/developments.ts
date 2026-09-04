@@ -20,7 +20,6 @@ export type DevelopmentOption = {
   homes: number;
   summary: string;
   points: string[];
-  preferred?: boolean;
 };
 
 export type DevelopmentSection = {
@@ -34,13 +33,17 @@ export type Development = {
   location: {
     settlement: string;
     area: string;
-    postcode?: string;
   };
   status: DevelopmentStatus;
   shortDescription: string;
   /** Longer card copy, used where there is room. */
   description?: string;
   heroImage: ImageAsset;
+  /** Alternative crops for the cards; each falls back to heroImage. */
+  cardImages?: {
+    home?: ImageAsset;
+    portfolio?: ImageAsset;
+  };
   year?: number;
   numberOfHomes?: string;
   tags?: string[];
@@ -49,16 +52,18 @@ export type Development = {
 
   /* ---- Project page content (all optional; sections render when present) ---- */
   intro?: string[];
-  site?: {
+  site?: DevelopmentSection & {
     areaHectares?: number;
     areaAcres?: number;
     addressLines?: string[];
-    paragraphs: string[];
     plan?: ImageAsset;
+    /** Shown beneath the plan. Keep it true whether or not a real plan is in place. */
+    planCaption?: string;
   };
   opportunity?: DevelopmentSection;
-  waterAndLandscape?: DevelopmentSection & { image?: ImageAsset };
+  waterAndLandscape?: DevelopmentSection & { images?: ImageAsset[] };
   options?: {
+    heading: string;
     stage: string;
     intro: string;
     items: DevelopmentOption[];
@@ -69,6 +74,8 @@ export type Development = {
     images?: ImageAsset[];
   };
   timeline?: TimelineStep[];
+  /** A plain sentence about where the project really is, shown with the timeline. */
+  statusNote?: string;
   holdStrategy?: DevelopmentSection;
 };
 
@@ -77,7 +84,8 @@ export type Development = {
  *
  * Add a new object to this array and it will appear in the navigation
  * dropdown, the developments page and (if `featured`) the homepage.
- * The project page at /developments/<slug> is generated automatically.
+ * The project page at /developments/<slug> is generated automatically;
+ * each optional content block below renders only when it is present.
  */
 export const developments: Development[] = [
   {
@@ -86,7 +94,6 @@ export const developments: Development[] = [
     location: {
       settlement: "Poundstock",
       area: "North Cornwall",
-      postcode: "EX23 0DY",
     },
     status: "Early feasibility",
     shortDescription:
@@ -94,6 +101,10 @@ export const developments: Development[] = [
     description:
       "We are exploring a collection of contemporary Cornish cottages positioned around the site's landscape and flood constraints rather than fighting them.",
     heroImage: images.newmillsHero,
+    cardImages: {
+      home: images.homeNewmillsCard,
+      portfolio: images.developmentsNewmills,
+    },
     year: 2026,
     numberOfHomes: "2 to 4",
     tags: ["Stream", "Small site", "Contemporary Cornish"],
@@ -105,6 +116,7 @@ export const developments: Development[] = [
     ],
 
     site: {
+      heading: "A road, a stream and a boundary that stays where it is.",
       areaHectares: 0.27,
       areaAcres: 0.66,
       addressLines: ["Poundstock", "North Cornwall", "EX23 0DY"],
@@ -113,6 +125,8 @@ export const developments: Development[] = [
         "The stream and the existing site boundary are fixed parts of the design. Everything else is still open.",
       ],
       plan: images.newmillsSitePlan,
+      planCaption:
+        "The existing site boundary and the stream are fixed parts of the design. Neither will be altered.",
     },
 
     opportunity: {
@@ -132,10 +146,11 @@ export const developments: Development[] = [
         "Homes, vehicle access and essential infrastructure will be located according to detailed flood-risk and topographical work.",
         "The stream will remain in its existing course. The landscape around it can then provide habitat, flood resilience and a better outlook for the homes.",
       ],
-      image: images.newmillsStream,
+      images: [images.newmillsStream, images.newmillsLandscape],
     },
 
     options: {
+      heading: "Two, three or four homes. Nothing drawn yet.",
       stage: "Early feasibility",
       intro:
         "We are currently considering three broad approaches. None of them is drawn yet. No house positions have been decided.",
@@ -158,7 +173,6 @@ export const developments: Development[] = [
             "A small group of cottages",
             "A better balance between residential value, rental income, landscape and development cost",
           ],
-          preferred: true,
         },
         {
           label: "Option C",
@@ -205,6 +219,8 @@ export const developments: Development[] = [
       { label: "Detailed design", state: "later" },
       { label: "Build", state: "later" },
     ],
+    statusNote:
+      "This is an early-stage development. No planning application has been made and no layout has been fixed.",
 
     holdStrategy: {
       heading: "Built with the long term in mind.",

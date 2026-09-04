@@ -15,13 +15,15 @@ type Props = {
 };
 
 /**
- * A quiet dropdown for the Developments item. Opens on hover, focus or click;
- * closes on Escape, outside click or navigation. The panel always uses the
- * opposite ground to the header so it reads clearly over any section.
+ * A quiet disclosure for the Developments item. Opens on hover or click
+ * (a tap only ever opens it, so touch tablets get the list first time);
+ * closes on Escape, outside click, focus leaving or navigation. The panel
+ * always uses the opposite ground to the header so it reads over any section.
  */
 export function DevelopmentDropdown({ item, tone, className }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const id = useId();
   const children = item.children ?? [];
@@ -35,7 +37,12 @@ export function DevelopmentDropdown({ item, tone, className }: Props) {
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      // Return focus to the trigger before the panel unmounts.
+      button.current?.focus();
+      setOpen(false);
+    };
     const onClick = (e: MouseEvent) => {
       if (!ref.current?.contains(e.target as Node)) setOpen(false);
     };
@@ -61,14 +68,13 @@ export function DevelopmentDropdown({ item, tone, className }: Props) {
       }}
     >
       <button
+        ref={button}
         type="button"
         aria-expanded={open}
-        aria-haspopup="menu"
         aria-controls={id}
-        onClick={() => setOpen((o) => !o)}
-        onFocus={() => setOpen(true)}
+        onClick={() => setOpen(true)}
         aria-current={active ? "page" : undefined}
-        className="link-line inline-flex items-baseline gap-1.5 opacity-80 transition-opacity duration-300 hover:opacity-100 aria-[current=page]:opacity-100"
+        className="link-line inline-flex items-baseline gap-1.5 opacity-90 transition-opacity duration-300 hover:opacity-100 aria-[current=page]:opacity-100"
       >
         {item.label}
         <span
@@ -86,7 +92,6 @@ export function DevelopmentDropdown({ item, tone, className }: Props) {
         {open ? (
           <m.div
             id={id}
-            role="menu"
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
@@ -95,14 +100,13 @@ export function DevelopmentDropdown({ item, tone, className }: Props) {
           >
             <ul className={cn("min-w-[13rem] px-5 py-4", inverted)}>
               {children.map((child) => (
-                <li key={child.href} role="none">
+                <li key={child.href}>
                   <TransitionLink
-                    role="menuitem"
                     href={child.href}
                     onClick={() => setOpen(false)}
                     className={cn(
                       "text-small block py-1.5 transition-opacity duration-300 hover:opacity-100",
-                      pathname === child.href ? "opacity-100" : "opacity-75",
+                      pathname === child.href ? "opacity-100" : "opacity-85",
                     )}
                   >
                     {child.label}

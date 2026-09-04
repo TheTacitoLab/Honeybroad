@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
-import { navigation } from "@/data/navigation";
+import type { NavItem } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 import { useHeaderTone } from "@/hooks/useHeaderTone";
 import { Lockup } from "@/components/brand/Logo";
@@ -11,11 +11,11 @@ import { DevelopmentDropdown } from "./DevelopmentDropdown";
 import { MobileMenu } from "./MobileMenu";
 
 /**
- * Fixed header. Transparent over hero sections, then a soft ground in the
+ * Fixed header. Transparent over hero sections, then a quiet ground in the
  * colour of whichever section is beneath it, with the logo and links
  * inverting so they always read.
  */
-export function Header() {
+export function Header({ navigation }: { navigation: NavItem[] }) {
   const { tone, scrolled, pastHero } = useHeaderTone();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,12 +38,12 @@ export function Header() {
           onDeep ? "text-cream" : "text-deep",
         )}
       >
-        {/* A soft ground that fades out at its lower edge, so there is never a hard band across imagery. */}
+        {/* An opaque ground with a short soft edge; never a frosted band across imagery. */}
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+1.5rem)] backdrop-blur-md transition-[opacity,background-color] duration-500 ease-out [mask-image:linear-gradient(to_bottom,black_55%,transparent)]",
-            onDeep ? "bg-deep/80" : tone === "cream" ? "bg-cream/80" : "bg-white/80",
+            "pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+0.5rem)] transition-[opacity,background-color] duration-500 ease-out [mask-image:linear-gradient(to_bottom,black_82%,transparent)]",
+            onDeep ? "bg-deep" : tone === "cream" ? "bg-cream" : "bg-white",
             scrolled ? "opacity-100" : "opacity-0",
           )}
         />
@@ -51,11 +51,13 @@ export function Header() {
           <TransitionLink
             href="/"
             aria-label="Honeybroad home"
-            className={cn(
-              "block transition-opacity duration-500",
-              pastHero ? "opacity-100" : "pointer-events-none opacity-0",
-            )}
+            aria-hidden={!pastHero || undefined}
             tabIndex={pastHero ? 0 : -1}
+            className={cn(
+              "block transition-opacity",
+              // Quick to leave, slower to arrive, so it never overlaps the hero wordmark.
+              pastHero ? "opacity-100 duration-500" : "pointer-events-none opacity-0 duration-150",
+            )}
           >
             <Lockup className="h-[22px] w-auto md:h-[26px]" />
           </TransitionLink>
@@ -74,7 +76,7 @@ export function Header() {
                       aria-current={
                         !item.href.includes("#") && pathname === item.href ? "page" : undefined
                       }
-                      className="link-line opacity-80 transition-opacity duration-300 hover:opacity-100 aria-[current=page]:opacity-100"
+                      className="link-line opacity-90 transition-opacity duration-300 hover:opacity-100 aria-[current=page]:opacity-100"
                     >
                       {item.label}
                     </TransitionLink>
@@ -96,7 +98,7 @@ export function Header() {
         </div>
       </header>
 
-      <MobileMenu open={menuOpen} onClose={closeMenu} />
+      <MobileMenu navigation={navigation} open={menuOpen} onClose={closeMenu} />
     </>
   );
 }

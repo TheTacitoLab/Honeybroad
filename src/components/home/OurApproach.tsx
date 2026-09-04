@@ -24,7 +24,7 @@ export function OurApproach() {
   return (
     <Section tone="cream" curve aria-labelledby="our-approach">
       <div className="wrap gutter">
-        <TextReveal as="p" id="our-approach" className="text-label opacity-70">
+        <TextReveal as="h2" id="our-approach" to={0.85} className="text-label">
           Our approach
         </TextReveal>
 
@@ -37,7 +37,8 @@ export function OurApproach() {
               <TextReveal
                 as="span"
                 y={16}
-                className="text-label col-span-2 pt-2 opacity-60 md:col-span-1"
+                to={0.85}
+                className="text-label col-span-2 pt-2 md:col-span-1"
               >
                 {String(i + 1).padStart(2, "0")}
               </TextReveal>
