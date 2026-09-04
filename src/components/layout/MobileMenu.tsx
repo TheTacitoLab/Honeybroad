@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useEffect, useRef } from "react";
 import { navigation } from "@/data/navigation";
 import { site } from "@/data/site";
@@ -20,7 +21,7 @@ type Props = {
  */
 export function MobileMenu({ open, onClose }: Props) {
   const lenisRef = useLenis();
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const firstLink = useRef<HTMLAnchorElement>(null);
   const previouslyFocused = useRef<Element | null>(null);
 

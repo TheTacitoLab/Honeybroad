@@ -1,6 +1,6 @@
 "use client";
 
-import { m, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
 import type { ReactNode } from "react";
 import { easeOutSoft } from "@/lib/motion";
 
@@ -43,17 +43,16 @@ export function TextReveal({
   once = true,
   id,
 }: Props) {
-  const reduced = useReducedMotion();
   const Tag = tags[as];
 
   return (
     <Tag
       id={id}
       className={className}
-      initial={{ opacity: 0, y: reduced ? 0 : y }}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, amount }}
-      transition={{ duration: reduced ? 0.5 : 0.95, ease: easeOutSoft, delay }}
+      transition={{ duration: 0.95, ease: easeOutSoft, delay }}
     >
       {children}
     </Tag>

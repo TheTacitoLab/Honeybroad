@@ -34,17 +34,19 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,color] duration-500 ease-out",
+          "fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-out",
           onDeep ? "text-cream" : "text-deep",
-          scrolled
-            ? onDeep
-              ? "bg-deep/85 backdrop-blur-md"
-              : tone === "cream"
-                ? "bg-cream/85 backdrop-blur-md"
-                : "bg-white/85 backdrop-blur-md"
-            : "bg-transparent",
         )}
       >
+        {/* A soft ground that fades out at its lower edge, so there is never a hard band across imagery. */}
+        <div
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+1.5rem)] backdrop-blur-md transition-[opacity,background-color] duration-500 ease-out [mask-image:linear-gradient(to_bottom,black_55%,transparent)]",
+            onDeep ? "bg-deep/80" : tone === "cream" ? "bg-cream/80" : "bg-white/80",
+            scrolled ? "opacity-100" : "opacity-0",
+          )}
+        />
         <div className="wrap gutter flex h-16 items-center justify-between md:h-20">
           <TransitionLink
             href="/"

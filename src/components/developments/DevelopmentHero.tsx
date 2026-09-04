@@ -1,7 +1,8 @@
 "use client";
 
-import { m, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { m, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { Development } from "@/data/developments";
 import { easeOutSoft } from "@/lib/motion";
 import { EditorialImage } from "@/components/ui/EditorialImage";
@@ -18,7 +19,7 @@ const entrance = (delay: number) => ({
  * The image drifts a little slower than the page as the visitor leaves.
  */
 export function DevelopmentHero({ development }: { development: Development }) {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,

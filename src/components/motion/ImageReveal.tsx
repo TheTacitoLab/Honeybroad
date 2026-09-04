@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  m,
-  useInView,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { m, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { easeOutSoft } from "@/lib/motion";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Direction = "up" | "left" | "right";
 
@@ -40,7 +35,8 @@ type Props = {
 /**
  * Reveals an image as it enters the viewport, then lets it drift gently
  * against the page as the visitor scrolls past. With reduced motion the
- * image simply fades in and never moves.
+ * transforms resolve instantly (via MotionConfig) so the image simply fades
+ * in, and the parallax drift is switched off.
  */
 export function ImageReveal({
   children,
@@ -51,7 +47,7 @@ export function ImageReveal({
   scaleFrom = 1.06,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const inView = useInView(ref, { once: true, amount: 0.2 });
 
   const { scrollYProgress } = useScroll({
@@ -64,29 +60,14 @@ export function ImageReveal({
   const move = moves[direction];
   const transition = { duration: 1.25, ease: easeOutSoft, delay };
 
-  if (reduced) {
-    return (
-      <div ref={ref} className={cn("relative overflow-hidden", className)}>
-        <m.div
-          className="absolute inset-0"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : undefined}
-          transition={{ duration: 0.7, delay }}
-        >
-          {children}
-        </m.div>
-      </div>
-    );
-  }
-
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      {/* Mask: slides into place. */}
+      {/* Mask: slides into place (a plain fade when motion is reduced). */}
       <m.div
         className="absolute inset-0 overflow-hidden"
-        initial={move.mask}
-        animate={inView ? { x: "0%", y: "0%" } : undefined}
-        transition={transition}
+        initial={{ ...move.mask, opacity: 0 }}
+        animate={inView ? { x: "0%", y: "0%", opacity: 1 } : undefined}
+        transition={{ ...transition, opacity: { duration: 0.6, delay } }}
       >
         {/* Counter-move + settle from a slight zoom. */}
         <m.div

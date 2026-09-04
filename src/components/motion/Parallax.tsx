@@ -1,7 +1,8 @@
 "use client";
 
-import { m, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { m, useScroll, useTransform } from "framer-motion";
 import { useRef, type ReactNode } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Props = {
   children: ReactNode;
@@ -16,7 +17,7 @@ type Props = {
  */
 export function Parallax({ children, className, distance = -40 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],

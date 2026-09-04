@@ -1,6 +1,6 @@
 "use client";
 
-import { m, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
@@ -14,6 +14,7 @@ import {
 } from "react";
 import { easeInOutSoft } from "@/lib/motion";
 import { useLenis } from "./SmoothScroll";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Phase = "idle" | "covering" | "covered" | "revealing";
 
@@ -45,7 +46,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const lenisRef = useLenis();
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
 
   const [phase, setPhase] = useState<Phase>("idle");
   const pendingHref = useRef<string | null>(null);

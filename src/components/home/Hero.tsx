@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  m,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { m, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { easeOutSoft } from "@/lib/motion";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { Wordmark } from "@/components/brand/Logo";
 import { TextLink } from "@/components/ui/TextLink";
 
@@ -26,7 +21,7 @@ const entrance = (delay: number) => ({
  * holds it in place for half a viewport before the cream section arrives.
  */
 export function Hero() {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const { scrollY } = useScroll();
   const viewport = useRef(900);
   const [hidden, setHidden] = useState(false);
@@ -41,22 +36,18 @@ export function Hero() {
   }, []);
 
   // First statement fades as the visitor begins to scroll; second arrives beneath it.
-  const firstOpacity = useTransform(scrollY, (v) =>
-    reduced ? 1 : 1 - Math.min(1, Math.max(0, v / (viewport.current * 0.28))),
-  );
-  const firstY = useTransform(scrollY, (v) =>
-    reduced ? 0 : -Math.min(1, Math.max(0, v / (viewport.current * 0.28))) * 24,
-  );
-  const secondOpacity = useTransform(scrollY, (v) => {
-    const t = (v - viewport.current * 0.18) / (viewport.current * 0.32);
-    return reduced ? (v > viewport.current * 0.2 ? 1 : 0) : Math.min(1, Math.max(0, t));
-  });
-  const secondY = useTransform(scrollY, (v) => {
-    const t = Math.min(1, Math.max(0, (v - viewport.current * 0.18) / (viewport.current * 0.32)));
-    return reduced ? 0 : (1 - t) * 20;
-  });
+  // The crossfade is opacity only, so it stays with reduced motion; the drift does not.
+  const clamp = (t: number) => Math.min(1, Math.max(0, t));
+  const firstProgress = (v: number) => clamp(v / (viewport.current * 0.28));
+  const secondProgress = (v: number) =>
+    clamp((v - viewport.current * 0.18) / (viewport.current * 0.32));
+
+  const firstOpacity = useTransform(scrollY, (v) => 1 - firstProgress(v));
+  const firstY = useTransform(scrollY, (v) => (reduced ? 0 : -firstProgress(v) * 24));
+  const secondOpacity = useTransform(scrollY, (v) => secondProgress(v));
+  const secondY = useTransform(scrollY, (v) => (reduced ? 0 : (1 - secondProgress(v)) * 20));
   const chromeOpacity = useTransform(scrollY, (v) =>
-    1 - Math.min(1, Math.max(0, (v - viewport.current * 0.55) / (viewport.current * 0.35))),
+    1 - clamp((v - viewport.current * 0.55) / (viewport.current * 0.35)),
   );
 
   // Once fully covered, take the pinned hero out of the compositor's hands.
