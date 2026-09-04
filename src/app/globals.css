@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Honeybroad design tokens
+   A deliberately small palette: Deep Water, Honey Cream and White.
+   Only opacity and two near-tints are used for hierarchy.
+------------------------------------------------------------------- */
+@theme {
+  --color-deep: #1d617a;
+  --color-deep-ink: #174f65; /* hover / pressed on light grounds */
+  --color-deep-mist: #2a6d86; /* image placeholders on deep grounds */
+  --color-cream: #fcf9da;
+  --color-cream-shade: #f3efc8; /* image placeholders on cream grounds */
+  --color-white: #ffffff;
+
+  --font-serif: var(--font-serif), "Iowan Old Style", "Times New Roman", serif;
+  --font-sans: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --breakpoint-3xl: 112rem;
+}
+
+/* Page-level defaults */
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto; /* Lenis handles smoothing when available */
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--color-deep);
+  color: var(--color-deep);
+  font-family: var(--font-sans);
+  font-feature-settings: "kern", "liga", "calt";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-deep);
+  color: var(--color-cream);
+}
+.tone-deep ::selection {
+  background-color: var(--color-cream);
+  color: var(--color-deep);
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* ------------------------------------------------------------------
+   Layout utilities
+------------------------------------------------------------------- */
+@utility gutter {
+  padding-inline: clamp(1.25rem, 5vw, 6rem);
+}
+
+@utility wrap {
+  width: 100%;
+  max-width: 108rem;
+  margin-inline: auto;
+}
+
+@utility grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+/* ------------------------------------------------------------------
+   Type scale — fluid, restrained, never shouting.
+------------------------------------------------------------------- */
+@utility text-display-xl {
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 7.2vw, 7rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+@utility text-display-lg {
+  font-family: var(--font-serif);
+  font-size: clamp(2.375rem, 5.2vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+@utility text-display-md {
+  font-family: var(--font-serif);
+  font-size: clamp(1.875rem, 3.6vw, 3.625rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+@utility text-display-sm {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 2.4vw, 2.375rem);
+  line-height: 1.12;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+@utility text-lede {
+  font-family: var(--font-sans);
+  font-size: clamp(1.125rem, 1.35vw, 1.375rem);
+  line-height: 1.5;
+  font-weight: 400;
+}
+@utility text-body {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.05vw, 1.125rem);
+  line-height: 1.65;
+  font-weight: 400;
+}
+@utility text-small {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+@utility text-label {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+/* Prose rhythm inside copy blocks */
+@utility copy {
+  & > * + * {
+    margin-top: 1.1em;
+  }
+}
+
+/* Navigation-style link: a hairline slides in from the left on hover. */
+@utility link-line {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  padding-bottom: 0.15em;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition:
+    background-size 0.45s var(--ease-out-soft),
+    opacity 0.3s ease;
+  &:hover,
+  &:focus-visible,
+  &[aria-current="page"] {
+    background-size: 100% 1px;
+  }
+}
+
+/* Inline link inside copy: always underlined, the line slides away on hover. */
+@utility link-underline {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  padding-bottom: 0.1em;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  transition:
+    background-size 0.45s var(--ease-out-soft),
+    opacity 0.3s ease;
+  &:hover,
+  &:focus-visible {
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+  }
+}
+
+@utility link-arrow {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  text-decoration: none;
+  & > .arrow {
+    display: inline-block;
+    transition: transform 0.45s var(--ease-out-soft);
+  }
+  &:hover > .arrow,
+  &:focus-visible > .arrow {
+    transform: translateX(0.3em);
+  }
+  &:hover > .arrow-down,
+  &:focus-visible > .arrow-down {
+    transform: translateY(0.25em);
+  }
+}
+
+/* Scroll indicator line in the hero */
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+.scroll-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  animation: scroll-line 2.6s var(--ease-in-out-soft) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-line::after {
+    animation: none;
+    transform: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
