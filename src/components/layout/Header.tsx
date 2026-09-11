@@ -42,7 +42,7 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+0.5rem)] transition-[opacity,background-color] duration-500 ease-out [mask-image:linear-gradient(to_bottom,black_82%,transparent)]",
+            "pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+0.5rem)] transition-[opacity,background-color] duration-500 ease-out [mask-image:linear-gradient(to_bottom,black_88%,transparent)]",
             onDeep ? "bg-deep" : tone === "cream" ? "bg-cream" : "bg-white",
             scrolled ? "opacity-100" : "opacity-0",
           )}

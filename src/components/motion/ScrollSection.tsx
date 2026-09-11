@@ -19,8 +19,8 @@ export function ScrollSection({ sticky, children, className, reverse }: Props) {
     <div className={cn("grid-editorial", className)}>
       <div
         className={cn(
-          "col-span-12 lg:col-span-5",
-          reverse && "lg:order-2 lg:col-start-8",
+          "col-span-12 lg:col-span-6",
+          reverse && "lg:order-2 lg:col-start-7",
         )}
       >
         <div className="lg:sticky lg:top-[22vh]">{sticky}</div>

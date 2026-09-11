@@ -44,14 +44,14 @@ export function DevelopmentHero({ development }: { development: Development }) {
           {development.name}
         </h1>
 
-        <div className="grid-editorial mt-8 items-end gap-y-6 md:mt-12">
+        <div className="grid-editorial mt-8 items-baseline gap-y-6 md:mt-12">
           <p className="text-lede rise col-span-12 lg:col-span-6" style={riseDelay(0.2)}>
             {development.location.settlement}
             <br />
             <span className="text-cream/85">{development.location.area}</span>
           </p>
           <p
-            className="text-label rise col-span-12 opacity-85 lg:col-span-4 lg:col-start-9"
+            className="text-lede rise col-span-12 text-cream/85 lg:col-span-4 lg:col-start-9"
             style={riseDelay(0.3)}
           >
             {development.status}
