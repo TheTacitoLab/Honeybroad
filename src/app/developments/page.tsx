@@ -33,7 +33,7 @@ export default function DevelopmentsPage() {
             >
               Developments
             </SectionHeading>
-            <Copy size="lede" delay={0.2} className="col-span-12 mt-10 lg:col-span-4 lg:col-start-9 lg:mt-0">
+            <Copy size="lede" delay={0.2} immediate className="col-span-12 mt-10 lg:col-span-4 lg:col-start-9 lg:mt-0">
               <p>
                 Small sites.
                 <br />
@@ -54,6 +54,7 @@ export default function DevelopmentsPage() {
               image={first.cardImages?.portfolio}
               variant="feature"
               headingLevel="h2"
+              priority
             />
           ) : null}
 

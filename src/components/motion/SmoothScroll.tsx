@@ -1,6 +1,6 @@
 "use client";
 
-import Lenis from "lenis";
+import type Lenis from "lenis";
 import {
   createContext,
   useCallback,
@@ -28,16 +28,23 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     const finePointer = window.matchMedia("(pointer: fine)").matches;
     if (reduced || !finePointer) return;
 
-    const instance = new Lenis({
-      autoRaf: true,
-      lerp: 0.085,
-      wheelMultiplier: 0.95,
-      smoothWheel: true,
+    // Loaded on demand so phones and reduced-motion visitors never download it.
+    let instance: Lenis | null = null;
+    let cancelled = false;
+    import("lenis").then(({ default: LenisCtor }) => {
+      if (cancelled) return;
+      instance = new LenisCtor({
+        autoRaf: true,
+        lerp: 0.085,
+        wheelMultiplier: 0.95,
+        smoothWheel: true,
+      });
+      lenisRef.current = instance;
     });
-    lenisRef.current = instance;
 
     return () => {
-      instance.destroy();
+      cancelled = true;
+      instance?.destroy();
       lenisRef.current = null;
     };
   }, []);

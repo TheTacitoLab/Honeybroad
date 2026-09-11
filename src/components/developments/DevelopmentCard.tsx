@@ -14,6 +14,8 @@ type Props = {
   variant?: "feature" | "grid";
   /** Heading level, so the card sits correctly in each page's outline. */
   headingLevel?: "h2" | "h3";
+  /** Load the image eagerly when the card is near the top of a page. */
+  priority?: boolean;
   className?: string;
 };
 
@@ -26,6 +28,7 @@ export function DevelopmentCard({
   image,
   variant = "feature",
   headingLevel: Heading = "h3",
+  priority = false,
   className,
 }: Props) {
   const img = image ?? development.heroImage;
@@ -44,6 +47,7 @@ export function DevelopmentCard({
         <div className="h-full w-full transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100">
           <EditorialImage
             image={img}
+            priority={priority}
             sizes={variant === "feature" ? "(min-width: 1440px) 1400px, 100vw" : "(min-width: 1024px) 50vw, 100vw"}
           />
         </div>

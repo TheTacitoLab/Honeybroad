@@ -8,6 +8,8 @@ type Props = {
   size?: "lede" | "body";
   delay?: number;
   muted?: boolean;
+  /** First-viewport copy: animate with CSS from first paint. */
+  immediate?: boolean;
 };
 
 /** A block of paragraphs with comfortable rhythm, revealed once in view. */
@@ -17,11 +19,13 @@ export function Copy({
   size = "body",
   delay = 0.1,
   muted = false,
+  immediate = false,
 }: Props) {
   return (
     <TextReveal
       delay={delay}
       to={muted ? 0.85 : 1}
+      immediate={immediate}
       className={cn(
         "copy max-w-[38rem]",
         size === "lede" ? "text-lede" : "text-body",

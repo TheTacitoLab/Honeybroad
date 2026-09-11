@@ -54,7 +54,7 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
             aria-hidden={!pastHero || undefined}
             tabIndex={pastHero ? 0 : -1}
             className={cn(
-              "block transition-opacity",
+              "relative block transition-opacity before:absolute before:-inset-x-1 before:-inset-y-3 before:content-['']",
               // Quick to leave, slower to arrive, so it never overlaps the hero wordmark.
               pastHero ? "opacity-100 duration-500" : "pointer-events-none opacity-0 duration-150",
             )}

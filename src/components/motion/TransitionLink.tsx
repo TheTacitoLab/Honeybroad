@@ -13,7 +13,9 @@ type Props = Omit<ComponentProps<typeof Link>, "href" | "ref"> & {
 
 /**
  * Drop-in replacement for next/link that routes through the branded page
- * transition. Same-page anchors scroll smoothly instead of navigating.
+ * transition. Same-page anchors scroll smoothly instead of navigating, and a
+ * link to the page you are already on scrolls back to the top. Modifier
+ * clicks are left to the browser so they open new tabs as expected.
  */
 export function TransitionLink({
   href,
@@ -31,18 +33,32 @@ export function TransitionLink({
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event);
-    if (event.defaultPrevented) return;
-    if (hash && samePage) {
-      event.preventDefault();
-      // Next frame so anything the click closed (the mobile menu, which
-      // pauses Lenis) has released the page first.
-      window.requestAnimationFrame(() => {
+    if (event.defaultPrevented || !samePage) return;
+
+    const modified =
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      (rest.target !== undefined && rest.target !== "_self");
+    if (modified) return;
+
+    event.preventDefault();
+    // Next frame so anything the click closed (the mobile menu, which
+    // pauses Lenis) has released the page first.
+    window.requestAnimationFrame(() => {
+      if (hash) {
         scrollTo(`#${hash}`);
         window.history.pushState(null, "", `#${hash}`);
         const target = document.getElementById(hash);
         if (target) focusHashTarget(target);
-      });
-    }
+      } else {
+        scrollTo(0);
+        if (window.location.hash) {
+          window.history.replaceState(null, "", path || pathname);
+        }
+      }
+    });
   };
 
   return (

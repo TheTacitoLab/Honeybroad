@@ -105,7 +105,12 @@ export function MobileMenu({ navigation, open, onClose }: Props) {
           transition={{ duration: 0.6, ease: easeInOutSoft }}
         >
           <div className="gutter flex h-16 items-center justify-between md:h-20">
-            <TransitionLink href="/" onClick={closeAndRelease} aria-label="Honeybroad home">
+            <TransitionLink
+              href="/"
+              onClick={closeAndRelease}
+              aria-label="Honeybroad home"
+              className="relative before:absolute before:-inset-x-1 before:-inset-y-3 before:content-['']"
+            >
               <Lockup className="h-[22px] w-auto" />
             </TransitionLink>
             <button

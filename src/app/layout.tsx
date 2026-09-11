@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import { site } from "@/data/site";
 import { navigation } from "@/data/navigation";
+import { pageMetadata } from "@/lib/seo";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { PageTransitionProvider } from "@/components/motion/PageTransition";
@@ -31,7 +32,13 @@ const sans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
-  axes: ["opsz"],
+});
+
+const home = pageMetadata({
+  title: "Honeybroad Homes | Contemporary Homes in Cornwall",
+  description: site.description,
+  path: "/",
+  absoluteTitle: true,
 });
 
 export const metadata: Metadata = {
@@ -41,22 +48,8 @@ export const metadata: Metadata = {
     template: "%s | Honeybroad Homes",
   },
   description: site.description,
-  openGraph: {
-    type: "website",
-    siteName: site.name,
-    locale: "en_GB",
-    url: "/",
-    title: "Honeybroad Homes | Contemporary Homes in Cornwall",
-    description: site.description,
-    // The file-based src/app/opengraph-image.png (and its .alt.txt) wins for the image itself.
-    images: [{ url: "/opengraph-image.png", width: 1200, height: 630, alt: "Honeybroad homes" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Honeybroad Homes | Contemporary Homes in Cornwall",
-    description: site.description,
-    images: ["/opengraph-image.png"],
-  },
+  openGraph: home.openGraph,
+  twitter: home.twitter,
 };
 
 export const viewport: Viewport = {
@@ -74,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-svh flex-col overflow-x-clip">
         {/* Without JavaScript, show everything that would otherwise wait for a reveal. */}
         <noscript>
-          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}section[data-hero]{height:auto;min-height:100svh}[data-hero] p[data-reveal]{position:static;margin-top:1.5rem}`}</style>
         </noscript>
         <MotionProvider>
           <SmoothScroll>

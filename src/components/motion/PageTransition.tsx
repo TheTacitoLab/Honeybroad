@@ -75,6 +75,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const navigate = useCallback(
     (href: string) => {
       if (reduced) {
+        pendingHref.current = href;
         router.push(href);
         return;
       }
@@ -97,6 +98,12 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     const href = pendingHref.current;
     if (!href) {
       setPhase("idle");
+      return;
+    }
+    if (href.split("#")[0] === pathname) {
+      // Already on the destination (Back pressed during the cover): land without pushing.
+      coveredPath.current = null;
+      setPhase("covered");
       return;
     }
     coveredPath.current = pathname;
@@ -136,6 +143,17 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     const frame = window.requestAnimationFrame(() => setPhase("revealing"));
     return () => window.cancelAnimationFrame(frame);
   }, [pathname, phase, lenisRef, setPhase]);
+
+  /* With reduced motion there is no panel; still hand focus to a hash target on landing. */
+  useEffect(() => {
+    if (!reduced) return;
+    const href = pendingHref.current;
+    if (!href) return;
+    pendingHref.current = null;
+    const hash = href.split("#")[1];
+    const target = hash ? document.getElementById(hash) : null;
+    if (target) focusHashTarget(target);
+  }, [pathname, reduced]);
 
   useEffect(() => clearFailsafe, []);
 

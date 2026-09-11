@@ -15,15 +15,18 @@ type Props = {
 };
 
 /**
- * A quiet disclosure for the Developments item. Opens on hover or click
- * (a tap only ever opens it, so touch tablets get the list first time);
- * closes on Escape, outside click, focus leaving or navigation. The panel
+ * A quiet disclosure for the Developments item. Opens on hover or click and
+ * toggles on repeated activation; a tablet's first tap (which fires hover
+ * then click) keeps it open. Closes on Escape, outside click, focus leaving
+ * or navigation. The panel
  * always uses the opposite ground to the header so it reads over any section.
  */
 export function DevelopmentDropdown({ item, tone, className }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
+  // Opened by hover and not yet consumed by a click (so a tablet's first tap keeps it open).
+  const hoverOpened = useRef(false);
   const pathname = usePathname();
   const id = useId();
   const children = item.children ?? [];
@@ -61,8 +64,14 @@ export function DevelopmentDropdown({ item, tone, className }: Props) {
     <div
       ref={ref}
       className={cn("relative", className)}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={() => {
+        hoverOpened.current = true;
+        setOpen(true);
+      }}
+      onMouseLeave={() => {
+        hoverOpened.current = false;
+        setOpen(false);
+      }}
       onBlur={(e) => {
         if (!ref.current?.contains(e.relatedTarget as Node)) setOpen(false);
       }}
@@ -72,7 +81,14 @@ export function DevelopmentDropdown({ item, tone, className }: Props) {
         type="button"
         aria-expanded={open}
         aria-controls={id}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (open && !hoverOpened.current) {
+            setOpen(false);
+          } else {
+            hoverOpened.current = false;
+            setOpen(true);
+          }
+        }}
         aria-current={active ? "page" : undefined}
         className="link-line inline-flex items-baseline gap-1.5 opacity-90 transition-opacity duration-300 hover:opacity-100 aria-[current=page]:opacity-100"
       >

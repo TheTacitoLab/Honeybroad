@@ -109,8 +109,9 @@ export function ContactForm() {
         role="status"
         aria-live="polite"
         className={cn(
-          "text-body max-w-[30rem] text-cream/85",
-          state.status === "idle" ? "sr-only" : sent ? "text-lede text-cream" : "mt-8",
+          "max-w-[30rem]",
+          sent ? "text-lede text-cream" : "text-body text-cream/85",
+          state.status === "idle" ? "sr-only" : !sent && "mt-8",
         )}
       >
         {sent ? "Thank you. We’ve got your message and will reply soon." : null}

@@ -8,7 +8,11 @@ export function Footer() {
   return (
     <footer data-tone="deep" className="tone-deep relative z-[1] bg-deep text-cream">
       <div className="wrap gutter flex flex-col gap-8 border-t border-cream/15 py-10 lg:flex-row lg:items-center lg:justify-between">
-        <TransitionLink href="/" aria-label="Honeybroad home" className="self-start">
+        <TransitionLink
+          href="/"
+          aria-label="Honeybroad home"
+          className="relative self-start before:absolute before:-inset-x-1 before:-inset-y-3 before:content-['']"
+        >
           <Lockup className="h-5 w-auto opacity-90" />
         </TransitionLink>
 

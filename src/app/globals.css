@@ -70,13 +70,15 @@ body {
 }
 
 /* ------------------------------------------------------------------
-   First-paint entrance. Pure CSS so the first viewport starts moving
-   before any JavaScript arrives (and counts for LCP straight away).
-   `backwards` fill only: once finished, the element's own styles apply.
+   First-paint entrance. Pure CSS so the entrance starts before any
+   JavaScript arrives. The keyframes start at 0.01 rather than 0 because
+   Chrome only counts an element towards LCP once it paints at non-zero
+   opacity. `backwards` fill only: once finished, the element's own styles
+   apply.
 ------------------------------------------------------------------- */
 @keyframes rise {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(22px);
   }
   to {
@@ -86,10 +88,28 @@ body {
 }
 @keyframes fade-in {
   from {
-    opacity: 0;
+    opacity: 0.01;
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Landscape phones: too short to pin the hero, so let it flow instead. */
+@media (max-height: 540px) {
+  section[data-hero] {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+  }
+  section[data-hero] > .wrap {
+    gap: 2rem;
+    padding-top: 5rem;
+    padding-bottom: 1.5rem;
+  }
+  .hero-spacer {
+    height: 0;
   }
 }
 .rise {

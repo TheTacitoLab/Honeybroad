@@ -10,7 +10,7 @@ export type Stat = {
 /** A quiet row of facts. Numbers in the serif, labels in the sans. */
 export function ProjectStats({ stats, className }: { stats: Stat[]; className?: string }) {
   return (
-    <dl className={cn("grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3", className)}>
+    <dl className={cn("grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3 max-md:[&>*:last-child:nth-child(odd)]:col-span-2", className)}>
       {stats.map((s, i) => (
         <TextReveal key={s.label} delay={i * 0.08} className="flex flex-col">
           <dt className="text-label mb-3 opacity-85">{s.label}</dt>

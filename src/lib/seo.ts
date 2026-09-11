@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { site } from "@/data/site";
+import ogImageFile from "@/app/opengraph-image.png";
 
-const ogImage = {
-  url: "/opengraph-image.png",
-  width: 1200,
-  height: 630,
-  alt: "Honeybroad homes",
+/**
+ * The single source of truth for the share image. Importing the file gives
+ * a content-hashed URL, so social caches refresh when the card is replaced.
+ */
+export const ogImage = {
+  url: ogImageFile.src,
+  width: ogImageFile.width,
+  height: ogImageFile.height,
+  alt: "Honeybroad Homes - contemporary homes in Cornwall and the South West",
 };
 
 /**
@@ -43,7 +48,7 @@ export function pageMetadata({
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: [ogImage.url],
+      images: [ogImage],
     },
   };
 }
